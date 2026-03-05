@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Générateur PSSI</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState } = React;
+
+        const PSSIGenerator = () => {
+            const [formData, setFormData] = useState({
+                companyName: '',
+                pwdLength: '12',
+                mfa: 'Obligatoire',
+                manager: 'Bitwarden',
+                remoteWork: 'Autorisé avec VPN',
+                incidentDelay: 'Immédiat'
+            });
+
+            const handleChange = (e) => {
+                setFormData({ ...formData, [e.target.name]: e.target.value });
+            };
+
+            return (
+                <div className="min-h-screen bg-gray-50 p-8 font-sans">
+                    <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-200">
+                            <h2 className="text-2xl font-bold mb-6 text-blue-700">Configuration PSSI</h2>
+                            <div className="space-y-4">
+                                <div>
+                                    <label className="block text-sm font-medium mb-1">Nom de l'entreprise</label>
+                                    <input name="companyName" onChange={handleChange} className="w-full p-2 border rounded-md" placeholder="Ex: Ma Super TPE" />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium mb-1">Mots de passe</label>
+                                    <select name="pwdLength" onChange={handleChange} className="w-full p-2 border rounded-md">
+                                        <option value="8">8 caractères</option>
+                                        <option value="12">12 caractères (Recommandé)</option>
+                                        <option value="16">16 caractères</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium mb-1">Délai d'alerte vol</label>
+                                    <select name="incidentDelay" onChange={handleChange} className="w-full p-2 border rounded-md">
+                                        <option value="Immédiat">Immédiat</option>
+                                        <option value="4h">Sous 4h</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <button onClick={() => window.print()} className="mt-8 w-full bg-blue-600 text-white py-3 rounded-lg font-semibold">Télécharger en PDF</button>
+                        </div>
+
+                        <div id="pssi-document" className="bg-white p-10 rounded-xl shadow-inner border border-gray-300">
+                            <h1 className="text-center text-3xl font-serif underline mb-6">PSSI Simplifiée</h1>
+                            <p className="text-right italic mb-8">Entreprise : {formData.companyName || "________________"}</p>
+                            <h3 className="text-blue-800 border-b font-bold mt-4">1. Authentification</h3>
+                            <p className="mb-4">Mots de passe : {formData.pwdLength} caractères min. MFA : {formData.mfa}.</p>
+                            <h3 className="text-blue-800 border-b font-bold mt-4">2. Incidents</h3>
+                            <p>En cas de vol, alerte sous : {formData.incidentDelay}.</p>
+                            <div className="mt-20 flex justify-between italic text-sm">
+                                <span>Signature Direction</span>
+                                <span>Signature Salarié</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<PSSIGenerator />);
+    </script>
+</body>
+</html>
