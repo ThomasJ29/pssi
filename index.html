@@ -3,24 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Générateur PSSI</title>
+    <title>Cyber Tyzef - Générateur PSSI</title>
     <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @media print {
+            .no-print { display: none; }
+            body { background: white; }
+            .print-document { box-shadow: none; border: none; width: 100%; }
+        }
+        .bg-cyber-dark { background-color: #0a0a0a; }
+        .text-cyber-teal { color: #15918d; }
+        .border-cyber-teal { border-color: #15918d; }
+        .bg-cyber-teal { background-color: #15918d; }
+    </style>
 </head>
-<body>
+<body class="bg-cyber-dark text-gray-200">
     <div id="root"></div>
 
     <script type="text/babel">
         const { useState } = React;
 
-        const PSSIGenerator = () => {
+        const App = () => {
             const [formData, setFormData] = useState({
                 companyName: '',
                 pwdLength: '12',
                 mfa: 'Obligatoire',
-                manager: 'Bitwarden',
                 remoteWork: 'Autorisé avec VPN',
                 incidentDelay: 'Immédiat'
             });
@@ -30,53 +40,127 @@
             };
 
             return (
-                <div className="min-h-screen bg-gray-50 p-8 font-sans">
-                    <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
-                        <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-200">
-                            <h2 className="text-2xl font-bold mb-6 text-blue-700">Configuration PSSI</h2>
-                            <div className="space-y-4">
+                <div className="min-h-screen p-4 md:p-8">
+                    {/* HEADER LOGO */}
+                    <div className="flex flex-col items-center mb-10 no-print">
+                        <div className="w-32 h-32 mb-4">
+                            {/* Remplace 'Logo.jpg' par l'URL réelle ou laisse ainsi si le fichier est dans le même dossier */}
+                            <img src="Logo.jpg" alt="Cyber Tyzef Logo" className="rounded-full border-2 border-cyber-teal shadow-[0_0_15px_rgba(21,145,141,0.5)]" />
+                        </div>
+                        <h1 className="text-3xl font-bold tracking-widest text-cyber-teal uppercase">Cyber Tyzef</h1>
+                        <p className="text-gray-400 italic">Expertise Sécurité pour TPE</p>
+                    </div>
+
+                    <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        
+                        {/* FORMULAIRE - NO PRINT */}
+                        <div className="bg-gray-900 p-6 rounded-2xl border border-gray-800 shadow-xl no-print">
+                            <h2 className="text-xl font-semibold mb-6 flex items-center">
+                                <span className="w-2 h-6 bg-cyber-teal mr-3 rounded"></span>
+                                Configuration de la Politique
+                            </h2>
+                            
+                            <div className="space-y-5">
                                 <div>
-                                    <label className="block text-sm font-medium mb-1">Nom de l'entreprise</label>
-                                    <input name="companyName" onChange={handleChange} className="w-full p-2 border rounded-md" placeholder="Ex: Ma Super TPE" />
+                                    <label className="block text-sm font-medium text-gray-400 mb-1">Nom de l'entreprise cliente</label>
+                                    <input name="companyName" onChange={handleChange} className="w-full bg-black border border-gray-700 p-2.5 rounded-lg focus:border-cyber-teal outline-none transition" placeholder="Ex: Ma Petite Entreprise" />
                                 </div>
-                                <div>
-                                    <label className="block text-sm font-medium mb-1">Mots de passe</label>
-                                    <select name="pwdLength" onChange={handleChange} className="w-full p-2 border rounded-md">
-                                        <option value="8">8 caractères</option>
-                                        <option value="12">12 caractères (Recommandé)</option>
-                                        <option value="16">16 caractères</option>
-                                    </select>
+
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-400 mb-1">Mots de passe</label>
+                                        <select name="pwdLength" onChange={handleChange} className="w-full bg-black border border-gray-700 p-2.5 rounded-lg focus:border-cyber-teal outline-none">
+                                            <option value="12">12 caractères (Conseillé)</option>
+                                            <option value="16">16 caractères (Fort)</option>
+                                            <option value="8">8 caractères (Minimum)</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-400 mb-1">Télétravail</label>
+                                        <select name="remoteWork" onChange={handleChange} className="w-full bg-black border border-gray-700 p-2.5 rounded-lg focus:border-cyber-teal outline-none">
+                                            <option value="Autorisé avec VPN">VPN Obligatoire</option>
+                                            <option value="Interdit">Interdit</option>
+                                            <option value="Libre">Accès Direct</option>
+                                        </select>
+                                    </div>
                                 </div>
-                                <div>
-                                    <label className="block text-sm font-medium mb-1">Délai d'alerte vol</label>
-                                    <select name="incidentDelay" onChange={handleChange} className="w-full p-2 border rounded-md">
-                                        <option value="Immédiat">Immédiat</option>
-                                        <option value="4h">Sous 4h</option>
+
+                                <div className="p-4 bg-gray-800/50 rounded-lg border border-gray-700">
+                                    <h3 className="text-cyber-teal font-bold mb-3 uppercase text-xs">Section Incidents</h3>
+                                    <label className="block text-sm font-medium text-gray-400 mb-1">Délai d'alerte maximum (Vol/Perte)</label>
+                                    <select name="incidentDelay" onChange={handleChange} className="w-full bg-black border border-gray-700 p-2.5 rounded-lg focus:border-cyber-teal outline-none">
+                                        <option value="Immédiat">Immédiat (Recommandé)</option>
+                                        <option value="Sous 4h">Sous 4 heures</option>
+                                        <option value="Sous 24h">Sous 24 heures</option>
                                     </select>
                                 </div>
                             </div>
-                            <button onClick={() => window.print()} className="mt-8 w-full bg-blue-600 text-white py-3 rounded-lg font-semibold">Télécharger en PDF</button>
+                            
+                            <button onClick={() => window.print()} className="mt-8 w-full bg-cyber-teal text-white py-4 rounded-xl font-bold shadow-lg hover:brightness-110 transition uppercase tracking-widest">
+                                Générer le document officiel
+                            </button>
                         </div>
 
-                        <div id="pssi-document" className="bg-white p-10 rounded-xl shadow-inner border border-gray-300">
-                            <h1 className="text-center text-3xl font-serif underline mb-6">PSSI Simplifiée</h1>
-                            <p className="text-right italic mb-8">Entreprise : {formData.companyName || "________________"}</p>
-                            <h3 className="text-blue-800 border-b font-bold mt-4">1. Authentification</h3>
-                            <p className="mb-4">Mots de passe : {formData.pwdLength} caractères min. MFA : {formData.mfa}.</p>
-                            <h3 className="text-blue-800 border-b font-bold mt-4">2. Incidents</h3>
-                            <p>En cas de vol, alerte sous : {formData.incidentDelay}.</p>
-                            <div className="mt-20 flex justify-between italic text-sm">
-                                <span>Signature Direction</span>
-                                <span>Signature Salarié</span>
+                        {/* DOCUMENT PRÉVISUALISATION */}
+                        <div className="bg-white text-gray-900 p-10 rounded-lg shadow-2xl print-document min-h-[800px] flex flex-col">
+                            <div className="border-b-2 border-cyber-teal pb-4 mb-8 flex justify-between items-end">
+                                <div>
+                                    <h1 className="text-2xl font-bold uppercase tracking-tighter">Charte de Sécurité Numérique</h1>
+                                    <p className="text-sm text-gray-500">Document contractuel interne</p>
+                                </div>
+                                <div className="text-right">
+                                    <p className="font-bold text-cyber-teal text-sm">CYBER TYZEF</p>
+                                    <p className="text-[10px] text-gray-400 uppercase">Expertise & Conformité</p>
+                                </div>
+                            </div>
+
+                            <p className="text-right mb-10 font-medium">Entreprise : <span className="underline">{formData.companyName || "Cyber Tyzef"}</span></p>
+
+                            <div className="space-y-8 flex-grow">
+                                <section>
+                                    <h3 className="text-lg font-bold text-cyber-teal mb-2">1. Authentification & Accès</h3>
+                                    <p className="text-sm leading-relaxed text-gray-700">
+                                        Tout accès au système d'information de l'entreprise doit être protégé par un mot de passe d'au moins <strong>{formData.pwdLength} caractères</strong>. L'usage de la double authentification (MFA) est <strong>obligatoire</strong> pour tous les accès distants et comptes e-mails.
+                                    </p>
+                                </section>
+
+                                <section>
+                                    <h3 className="text-lg font-bold text-cyber-teal mb-2">2. Mobilité & Télétravail</h3>
+                                    <p className="text-sm leading-relaxed text-gray-700">
+                                        Le télétravail est <strong>{formData.remoteWork.toLowerCase()}</strong>. Les données de l'entreprise ne doivent en aucun cas être stockées sur des équipements personnels non sécurisés.
+                                    </p>
+                                </section>
+
+                                <section className="p-4 bg-gray-50 border-l-4 border-cyber-teal">
+                                    <h3 className="text-lg font-bold text-cyber-teal mb-2">3. Gestion des Incidents (Critique)</h3>
+                                    <ul className="text-sm space-y-2 text-gray-700 list-disc ml-5">
+                                        <li><strong>Signalement :</strong> Tout collaborateur constatant la perte ou le vol d'un équipement (PC, Smartphone) doit prévenir la direction dans un délai <strong>{formData.incidentDelay.toLowerCase()}</strong>.</li>
+                                        <li><strong>Attaque :</strong> En cas de comportement suspect (fichiers inaccessibles, demande de rançon), il est impératif de <strong>déconnecter l'appareil du réseau immédiatement</strong> sans l'éteindre.</li>
+                                        <li><strong>Responsabilité :</strong> Le salarié s'engage à changer ses mots de passe personnels s'ils étaient enregistrés sur l'appareil dérobé.</li>
+                                    </ul>
+                                </section>
+                            </div>
+
+                            <div className="mt-16 pt-10 border-t border-gray-100 grid grid-cols-2 gap-10">
+                                <div>
+                                    <p className="text-[10px] uppercase text-gray-400 mb-8">Cachet et Signature Direction</p>
+                                    <div className="h-20 border border-dashed border-gray-200 rounded"></div>
+                                </div>
+                                <div>
+                                    <p className="text-[10px] uppercase text-gray-400 mb-8">Signature Salarié (Lu et approuvé)</p>
+                                    <div className="h-20 border border-dashed border-gray-200 rounded"></div>
+                                </div>
                             </div>
                         </div>
+
                     </div>
+                    <p className="text-center text-gray-600 text-xs mt-10 no-print">© 2024 Cyber Tyzef - Document généré à titre indicatif.</p>
                 </div>
             );
         };
 
         const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<PSSIGenerator />);
+        root.render(<App />);
     </script>
 </body>
 </html>
